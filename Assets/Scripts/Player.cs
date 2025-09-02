@@ -11,8 +11,11 @@ public class Player : MonoBehaviour
     private Vector3 startPosition = new Vector3(-13, -2, 0);
     private Rigidbody2D rigidbody2D;
 
-    private float maxDistance = 3f;
+    private float maxLaunchRadius = 3f;
     private Vector3 launchDirection;
+    
+    private float launchForce = 25f;
+    private float launchForceMultiplier;
 
     private void Awake()
     {
@@ -32,15 +35,21 @@ public class Player : MonoBehaviour
         
         launchDirection = (startPosition - mousePosition).normalized;
 
-        if (Vector3.Distance(mousePosition, startPosition) >= maxDistance)
+        if (Vector3.Distance(mousePosition, startPosition) >= maxLaunchRadius)
         {
-            transform.position = startPosition - launchDirection * maxDistance;
+            transform.position = startPosition - launchDirection * maxLaunchRadius;
         }
         else
         {
             transform.position = mousePosition;    
         }
+    }
+
+    private void OnMouseUp()
+    {
+        rigidbody2D.isKinematic = false;
         
-        
+        launchForceMultiplier = Vector3.Distance(transform.position, startPosition) / maxLaunchRadius;
+        rigidbody2D.velocity = launchDirection * launchForce * launchForceMultiplier;
     }
 }
