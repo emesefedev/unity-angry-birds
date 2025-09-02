@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     private Vector3 startPosition = new Vector3(-13, -2, 0);
     private Rigidbody2D rigidbody2D;
 
+    private float maxDistance = 3f;
+    private Vector3 launchDirection;
+
     private void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -27,6 +30,17 @@ public class Player : MonoBehaviour
         Vector3 mousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
         
-        transform.position = mousePosition;
+        launchDirection = (startPosition - mousePosition).normalized;
+
+        if (Vector3.Distance(mousePosition, startPosition) >= maxDistance)
+        {
+            transform.position = startPosition - launchDirection * maxDistance;
+        }
+        else
+        {
+            transform.position = mousePosition;    
+        }
+        
+        
     }
 }
